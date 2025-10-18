@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Level {
+  L1
+  L2
+  L3
+  M1
+  M2
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  clerkId    String    @unique
+  email      String?
+  name       String?
+  avatarUrl  String?
+  createdAt  DateTime  @default(now())
+  documents  Document[]
+}
+
+model Document {
+  id             Int      @id @default(autoincrement())
+  title          String
+  description    String?
+  level          Level
+  fileUrl        String
+  fileType       String
+  filename       String
+  uploadedById   Int
+  uploadedBy     User     @relation(fields: [uploadedById], references: [id])
+  uploadedByName String
+  createdAt      DateTime @default(now())
+}
