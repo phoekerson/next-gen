@@ -1,4 +1,3 @@
-// app/layout.tsx
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import Header from '../components/Header';
@@ -6,7 +5,7 @@ import Image from 'next/image';
 import logo from "@/public/logo.webp";
 
 export const metadata = {
-  title: 'LBS Docs — partage',
+  title: 'LBS SHARE',
   description: 'Plateforme de partage de supports LBS',
 };
 

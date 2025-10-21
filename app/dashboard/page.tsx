@@ -1,4 +1,3 @@
-// app/dashboard/page.tsx
 'use client';
 import { useEffect, useState } from 'react';
 import { useUser, SignInButton } from '@clerk/nextjs';
@@ -33,7 +32,6 @@ export default function DashboardPage() {
     fetchDocs();
   }, [levelFilter]);
 
-  // si connecté, sync user to DB (appel à /api/sync-user)
   useEffect(() => {
     async function sync() {
       if (isSignedIn && user) {
@@ -89,7 +87,14 @@ export default function DashboardPage() {
 
       <section className="grid md:grid-cols-2 gap-4">
         {docs.map((d) => (
-          <DocumentCard key={d.id} doc={d} isSignedIn={Boolean(isSignedIn)} />
+          <DocumentCard
+            key={d.id}
+            doc={{
+              ...d,
+              description: d.description ?? "",
+            }}
+            isSignedIn={Boolean(isSignedIn)}
+          />
         ))}
       </section>
     </div>

@@ -1,4 +1,3 @@
-// app/page.tsx
 'use client';
 import Image from 'next/image';
 import logo from '@/public/logo.webp';
@@ -14,7 +13,7 @@ export default function Home() {
           <h1 className="text-4xl font-extrabold mt-6 text-[#0b2468]">LBS Docs — Partage de supports</h1>
           <p className="mt-4 text-gray-700">
             Une plateforme simple pour que les étudiants de Lomé Business School partagent les supports de cours,
-            épreuves d'examen et fichiers utiles. Filtre par niveau (L1, L2, L3, M1, M2) et télécharge en toute
+            épreuves d'examen et fichiers utiles. Filtre par niveau (B1, B2, B3, M1, M2) et télécharge en toute
             simplicité.
           </p>
 

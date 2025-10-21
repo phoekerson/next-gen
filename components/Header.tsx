@@ -1,4 +1,3 @@
-// components/Header.tsx
 'use client';
 import { SignInButton, SignUpButton, useUser, SignOutButton } from '@clerk/nextjs';
 import Link from 'next/link';
@@ -16,7 +15,7 @@ export default function Header() {
             <Image src={logo} alt="LBS" width={120} height={48} />
             <div className="text-sm">
               <div className="font-bold">Lomé Business School</div>
-              <div className="text-xs opacity-90">Partage de supports étudiants</div>
+              <div className="text-xs opacity-90">Partage de supports de cours</div>
             </div>
           </div>
         </Link>

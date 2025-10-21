@@ -66,10 +66,10 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
       // Nettoyer l'URL du blob
       window.URL.revokeObjectURL(blobUrl);
       
-      console.log('✅ Téléchargement lancé avec succès');
+      console.log('Téléchargement lancé avec succès');
       
     } catch (error) {
-      console.error('❌ Erreur téléchargement:', error);
+      console.error('Erreur téléchargement:', error);
       alert('Erreur lors du téléchargement: ' + (error as Error).message);
     } finally {
       setDownloading(false);
@@ -95,11 +95,11 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
         throw new Error(data.error || 'Erreur lors de la correction');
       }
       
-      console.log('✅ Accès corrigé:', data);
+      console.log('Accès corrigé:', data);
       alert(data.message || 'Accès au fichier corrigé avec succès!');
       
     } catch (error) {
-      console.error('❌ Erreur correction accès:', error);
+      console.error('Erreur correction accès:', error);
       alert('Erreur: ' + (error as Error).message);
     } finally {
       setFixingAccess(false);
@@ -117,10 +117,10 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
       const downloadUrl = `/api/download-redirect?id=${doc.id}`;
       window.open(downloadUrl, '_blank');
       
-      console.log('✅ Redirection lancée');
+      console.log('Redirection lancée');
       
     } catch (error) {
-      console.error('❌ Erreur redirection:', error);
+      console.error('Erreur redirection:', error);
       alert('Erreur: ' + (error as Error).message);
     } finally {
       setTestingRedirect(false);
@@ -159,7 +159,7 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
 
           {/* Nom du fichier */}
           <div className="text-xs text-gray-400 mt-2 truncate" title={doc.filename}>
-            📄 {doc.filename}
+             {doc.filename}
           </div>
         </div>
 
@@ -179,7 +179,6 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
                    </span>
                  ) : (
                    <span className="flex items-center gap-2">
-                     <span>⬇️</span>
                      <span>Télécharger</span>
                    </span>
                  )}
@@ -192,12 +191,10 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
                >
                  {fixingAccess ? (
                    <span className="flex items-center gap-2">
-                     <span className="animate-spin">⏳</span>
                      <span>Correction...</span>
                    </span>
                  ) : (
                    <span className="flex items-center gap-2">
-                     <span>🔧</span>
                      <span>Corriger accès</span>
                    </span>
                  )}
@@ -210,12 +207,10 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
                >
                  {testingRedirect ? (
                    <span className="flex items-center gap-2">
-                     <span className="animate-spin">⏳</span>
                      <span>Test...</span>
                    </span>
                  ) : (
                    <span className="flex items-center gap-2">
-                     <span>🚀</span>
                      <span>Test Redirect</span>
                    </span>
                  )}
@@ -228,7 +223,6 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
                  className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors text-center whitespace-nowrap"
                >
                  <span className="flex items-center gap-2 justify-center">
-                   <span>👁️</span>
                    <span>Aperçu</span>
                  </span>
                </a>
@@ -236,7 +230,7 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
            ) : (
              <Link href="/sign-in">
                <button className="px-4 py-2 bg-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-400 transition-colors whitespace-nowrap">
-                 🔒 Se connecter
+                  Se connecter
                </button>
              </Link>
            )}
