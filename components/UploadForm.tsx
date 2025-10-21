@@ -134,7 +134,8 @@ export default function UploadForm({ onUploaded, user }: any) {
           onSuccess={(result) => {
             console.log('Upload réussi:', result);
             setUploadedFile(result);
-            handleCloudinaryUpload(result);
+            // Ne pas appeler handleCloudinaryUpload automatiquement
+            // L'utilisateur doit cliquer sur "Enregistrer" après avoir rempli le titre
           }}
           onError={(error) => {
             console.error('Erreur upload:', error);
@@ -173,8 +174,33 @@ export default function UploadForm({ onUploaded, user }: any) {
                 </button>
                 
                 {uploadedFile && (
-                  <div className="p-3 bg-green-50 border border-green-200 rounded text-green-700 text-sm">
-                    ✅ Fichier uploadé avec succès: {uploadedFile.info?.original_filename}
+                  <div className="space-y-3">
+                    <div className="p-3 bg-green-50 border border-green-200 rounded text-green-700 text-sm">
+                      ✅ Fichier uploadé avec succès: {uploadedFile.info?.original_filename}
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleCloudinaryUpload(uploadedFile)}
+                        disabled={loading || !title.trim()}
+                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {loading ? 'Enregistrement...' : 'Enregistrer le document'}
+                      </button>
+                      
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setUploadedFile(null);
+                          setError(null);
+                        }}
+                        disabled={loading}
+                        className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
+                      >
+                        Changer
+                      </button>
+                    </div>
                   </div>
                 )}
                 

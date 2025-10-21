@@ -21,10 +21,21 @@ export async function POST(req: Request) {
     }
 
     
+    // Debug des variables d'environnement
+    console.log('🔍 Variables d\'environnement Cloudinary:');
+    console.log('CLOUDINARY_CLOUD_NAME:', process.env.CLOUDINARY_CLOUD_NAME ? '✅ Définie' : '❌ Manquante');
+    console.log('CLOUDINARY_API_KEY:', process.env.CLOUDINARY_API_KEY ? '✅ Définie' : '❌ Manquante');
+    console.log('CLOUDINARY_API_SECRET:', process.env.CLOUDINARY_API_SECRET ? '✅ Définie' : '❌ Manquante');
+
     if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-      console.error('Configuration Cloudinary manquante');
+      console.error('❌ Configuration Cloudinary manquante');
+      console.error('Variables manquantes:');
+      if (!process.env.CLOUDINARY_CLOUD_NAME) console.error('- CLOUDINARY_CLOUD_NAME');
+      if (!process.env.CLOUDINARY_API_KEY) console.error('- CLOUDINARY_API_KEY');
+      if (!process.env.CLOUDINARY_API_SECRET) console.error('- CLOUDINARY_API_SECRET');
+      
       return NextResponse.json({ 
-        error: 'Configuration Cloudinary manquante' 
+        error: 'Configuration Cloudinary manquante. Vérifiez votre fichier .env.local' 
       }, { status: 500 });
     }
 
