@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient, Level } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { Level } from "@/lib/types";
 
 const prisma = new PrismaClient();
 
