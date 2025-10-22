@@ -10,7 +10,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'clerkId manquant' }, { status: 400 });
     }
 
-    console.log('🔄 Synchronisation utilisateur:', { clerkId, email, name });
+    console.log('Synchronisation utilisateur:', { clerkId, email, name });
 
     const user = await prisma.user.upsert({
       where: { clerkId },

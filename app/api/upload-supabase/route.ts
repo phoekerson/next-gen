@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { supabaseAdmin, supabaseBucket } from '@/lib/supabase';
 import { Level } from '@/lib/types';
-
-const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   try {
