@@ -27,11 +27,11 @@ export async function POST(req: Request) {
       },
     });
 
-    console.log('✅ Utilisateur synchronisé:', user.id);
+    console.log('Utilisateur synchronisé:', user.id);
     return NextResponse.json({ success: true, user });
 
   } catch (err: any) {
-    console.error('❌ Erreur synchronisation utilisateur:', err);
+    console.error(' Erreur synchronisation utilisateur:', err);
     return NextResponse.json({ error: 'Erreur base de données' }, { status: 500 });
   }
 }
