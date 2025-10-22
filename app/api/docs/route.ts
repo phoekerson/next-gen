@@ -8,7 +8,6 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const levelParam = searchParams.get('level');
 
-    // Construire le filtre
     const where: any = {};
     if (levelParam && Object.values(Level).includes(levelParam as Level)) {
       where.level = levelParam as Level;
