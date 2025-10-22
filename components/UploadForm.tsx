@@ -42,7 +42,7 @@ export default function UploadForm({ onUploaded, user }: any) {
       formData.append('level', level);
       formData.append('uploadedByName', user.firstName ?? user.fullName ?? user.username ?? 'Etudiant');
 
-      console.log('🔄 Upload vers Supabase Storage...');
+      console.log(' Upload vers Supabase Storage...');
       
       const res = await fetch('/api/upload-supabase', {
         method: 'POST',
@@ -89,7 +89,7 @@ export default function UploadForm({ onUploaded, user }: any) {
               Cliquez pour sélectionner un fichier ou glissez-déposez ici
             </p>
             <p className="text-sm text-gray-400">
-              PDF, DOC, DOCX, TXT, JPG, PNG, MP4, AVI (max 10MB)
+              PDF, DOC, DOCX, XLS, PPTX(max 20MB)
             </p>
           </div>
           <input
@@ -105,7 +105,7 @@ export default function UploadForm({ onUploaded, user }: any) {
         {selectedFile && (
           <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
             <div className="flex items-center space-x-2">
-              <span className="text-green-600">✅</span>
+              <span className="text-green-600"></span>
               <span className="text-sm text-green-800">
                 Fichier sélectionné: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
               </span>
@@ -162,7 +162,7 @@ export default function UploadForm({ onUploaded, user }: any) {
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
             <div className="flex items-center space-x-2">
-              <span className="text-red-600">❌</span>
+              <span className="text-red-600"></span>
               <span className="text-sm text-red-800">{error}</span>
             </div>
           </div>
@@ -180,7 +180,6 @@ export default function UploadForm({ onUploaded, user }: any) {
             </span>
           ) : (
             <span className="flex items-center justify-center space-x-2">
-              <span>📤</span>
               <span>Uploader le document</span>
             </span>
           )}

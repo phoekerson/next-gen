@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma'; // Import du singleton
+import { PrismaClient } from '@prisma/client';
 import { Level } from "@/lib/types";
+
+const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   try {
