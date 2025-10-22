@@ -1,6 +1,5 @@
 'use client';
-import { useState } from 'react';
-import { CldUploadWidget } from 'next-cloudinary';
+import { useState, useRef } from 'react';
 
 export default function UploadForm({ onUploaded, user }: any) {
   const [title, setTitle] = useState('');
@@ -8,11 +7,22 @@ export default function UploadForm({ onUploaded, user }: any) {
   const [level, setLevel] = useState('L1');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [uploadedFile, setUploadedFile] = useState<any>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  async function handleCloudinaryUpload(result: any) {
-    if (!result?.info?.secure_url) {
-      setError('Erreur lors de l\'upload vers Cloudinary');
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setError(null);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!selectedFile) {
+      setError('Veuillez sélectionner un fichier');
       return;
     }
 
@@ -25,195 +35,157 @@ export default function UploadForm({ onUploaded, user }: any) {
     setError(null);
 
     try {
-      const payload = {
-        title: title.trim(),
-        description: description.trim(),
-        level,
-        fileUrl: result.info.secure_url,
-        filename: result.info.original_filename || result.info.public_id,
-        fileType: result.info.format || 'application/octet-stream',
-        clerkId: user.id,
-        uploadedByName: user.firstName ?? user.fullName ?? user.username ?? 'Etudiant',
-      };
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('title', title.trim());
+      formData.append('description', description.trim());
+      formData.append('level', level);
+      formData.append('uploadedByName', user.firstName ?? user.fullName ?? user.username ?? 'Etudiant');
 
-      console.log('🔄 Enregistrement du document en base de données...');
+      console.log('🔄 Upload vers Supabase Storage...');
       
-      const res = await fetch('/api/upload-cloudinary', {
+      const res = await fetch('/api/upload-supabase', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: formData,
       });
 
       const data = await res.json();
       
       if (!res.ok) {
-        throw new Error(data.error || 'Erreur lors de l\'enregistrement');
+        throw new Error(data.error || 'Erreur lors de l\'upload');
       }
 
       // Reset du formulaire
       setTitle('');
       setDescription('');
-      setUploadedFile(null);
+      setSelectedFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       setError(null);
       
-      console.log('Document enregistré avec succès:', data.doc.id);
+      console.log('Document uploadé avec succès:', data.doc.id);
       
       // Callback pour rafraîchir la liste
       onUploaded?.();
       
     } catch (err: any) {
-      console.error('Erreur enregistrement:', err);
-      setError(err.message || 'Erreur lors de l\'enregistrement');
+      console.error('Erreur upload:', err);
+      setError(err.message || 'Erreur lors de l\'upload');
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="p-6 border rounded-lg shadow-sm bg-white space-y-4">
       <h3 className="text-lg font-semibold text-gray-800">Uploader un nouveau document</h3>
       
-      {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
-          {error}
-        </div>
-      )}
-
-      <div className="grid md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Titre du document *
-          </label>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
+          <div className="space-y-2">
+            <div className="text-4xl">📁</div>
+            <p className="text-gray-600">
+              Cliquez pour sélectionner un fichier ou glissez-déposez ici
+            </p>
+            <p className="text-sm text-gray-400">
+              PDF, DOC, DOCX, TXT, JPG, PNG, MP4, AVI (max 10MB)
+            </p>
+          </div>
           <input
+            ref={fileInputRef}
+            type="file"
+            onChange={handleFileSelect}
+            accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mov"
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
             required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Ex: Cours de mathématiques L1"
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
-        
+
+        {selectedFile && (
+          <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <span className="text-green-600">✅</span>
+              <span className="text-sm text-green-800">
+                Fichier sélectionné: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+              </span>
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Titre du document *
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Cours de Mathématiques"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Niveau d'étude *
+            </label>
+            <select
+              value={level}
+              onChange={(e) => setLevel(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="L1">L1</option>
+              <option value="L2">L2</option>
+              <option value="L3">L3</option>
+              <option value="M1">M1</option>
+              <option value="M2">M2</option>
+            </select>
+          </div>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Niveau *
+            Description (optionnel)
           </label>
-          <select 
-            value={level} 
-            onChange={(e) => setLevel(e.target.value)} 
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="L1">1ère année (L1)</option>
-            <option value="L2">2ème année (L2)</option>
-            <option value="L3">3ème année (L3)</option>
-            <option value="M1">Master 1 (M1)</option>
-            <option value="M2">Master 2 (M2)</option>
-          </select>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            rows={3}
+            placeholder="Décrivez brièvement le contenu du document..."
+          />
         </div>
-      </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Description (optionnel)
-        </label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Brève description du contenu du document..."
-          rows={3}
-          className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </div>
+        {error && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <span className="text-red-600">❌</span>
+              <span className="text-sm text-red-800">{error}</span>
+            </div>
+          </div>
+        )}
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Fichier *
-        </label>
-        
-        <CldUploadWidget
-          signatureEndpoint="/api/sign-cloudinary-params"
-          onSuccess={(result) => {
-            console.log('Upload réussi:', result);
-            setUploadedFile(result);
-            // Ne pas appeler handleCloudinaryUpload automatiquement
-            // L'utilisateur doit cliquer sur "Enregistrer" après avoir rempli le titre
-          }}
-          onError={(error) => {
-            console.error('Erreur upload:', error);
-            setError('Erreur lors de l\'upload du fichier');
-          }}
-          options={{
-            folder: `lbs_documents/${level}`,
-            resourceType: 'auto',
-            maxFileSize: 100000000, // 100MB
-            clientAllowedFormats: ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'],
-            tags: [`level_${level}`, 'lbs_document'],
-          }}
+        <button
+          type="submit"
+          disabled={loading || !selectedFile}
+          className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
         >
-          {({ open }) => {
-            return (
-              <div className="space-y-3">
-                <button
-                  type="button"
-                  onClick={() => open()}
-                  disabled={loading}
-                  className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <div className="text-center">
-                    <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <p className="mt-2 text-sm text-gray-600">
-                      <span className="font-medium text-blue-600 hover:text-blue-500">
-                        Cliquez pour sélectionner un fichier
-                      </span>
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX (max 100MB)
-                    </p>
-                  </div>
-                </button>
-                
-                {uploadedFile && (
-                  <div className="space-y-3">
-                    <div className="p-3 bg-green-50 border border-green-200 rounded text-green-700 text-sm">
-                      ✅ Fichier uploadé avec succès: {uploadedFile.info?.original_filename}
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleCloudinaryUpload(uploadedFile)}
-                        disabled={loading || !title.trim()}
-                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {loading ? 'Enregistrement...' : 'Enregistrer le document'}
-                      </button>
-                      
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setUploadedFile(null);
-                          setError(null);
-                        }}
-                        disabled={loading}
-                        className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
-                      >
-                        Changer
-                      </button>
-                    </div>
-                  </div>
-                )}
-                
-                {loading && (
-                  <div className="p-3 bg-blue-50 border border-blue-200 rounded text-blue-700 text-sm">
-                    🔄 Enregistrement en cours...
-                  </div>
-                )}
-              </div>
-            );
-          }}
-        </CldUploadWidget>
-      </div>
+          {loading ? (
+            <span className="flex items-center justify-center space-x-2">
+              <span className="animate-spin">⏳</span>
+              <span>Upload en cours...</span>
+            </span>
+          ) : (
+            <span className="flex items-center justify-center space-x-2">
+              <span>📤</span>
+              <span>Uploader le document</span>
+            </span>
+          )}
+        </button>
+      </form>
     </div>
   );
 }

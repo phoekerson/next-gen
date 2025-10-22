@@ -7,18 +7,31 @@ export async function POST(req: Request) {
     const { clerkId, email, name, avatarUrl } = body;
 
     if (!clerkId) {
-      return NextResponse.json({ error: 'clerkId missing' }, { status: 400 });
+      return NextResponse.json({ error: 'clerkId manquant' }, { status: 400 });
     }
+
+    console.log('🔄 Synchronisation utilisateur:', { clerkId, email, name });
 
     const user = await prisma.user.upsert({
       where: { clerkId },
-      update: { email, name, avatarUrl },
-      create: { clerkId, email, name, avatarUrl },
+      update: { 
+        email, 
+        name, 
+        avatarUrl 
+      },
+      create: { 
+        clerkId, 
+        email, 
+        name, 
+        avatarUrl 
+      },
     });
 
-    return NextResponse.json({ user });
+    console.log('✅ Utilisateur synchronisé:', user.id);
+    return NextResponse.json({ success: true, user });
+
   } catch (err: any) {
-    console.error('sync-user error:', err);
-    return NextResponse.json({ error: 'Database error' }, { status: 500 });
+    console.error('❌ Erreur synchronisation utilisateur:', err);
+    return NextResponse.json({ error: 'Erreur base de données' }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import Header from '../components/Header';
+import UserSyncProvider from '../components/UserSyncProvider';
 import Image from 'next/image';
 import logo from "@/public/logo.webp";
 
@@ -14,10 +15,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr">
       <body>
         <ClerkProvider>
-          <div className="min-h-screen bg-white">
-            <Header />
-            <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
-          </div>
+          <UserSyncProvider>
+            <div className="min-h-screen bg-white">
+              <Header />
+              <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
+            </div>
+          </UserSyncProvider>
         </ClerkProvider>
       </body>
     </html>

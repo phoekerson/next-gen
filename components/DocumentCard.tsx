@@ -25,17 +25,38 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
     setDownloading(true);
     try {
       console.log('🔄 Début du téléchargement pour document:', doc.id);
-      
-      // Utiliser l'API de redirection qui est plus simple et fiable
-      const downloadUrl = `/api/download-redirect?id=${doc.id}`;
-      
-      // Ouvrir le téléchargement dans un nouvel onglet
-      window.open(downloadUrl, '_blank');
-      
-      console.log('✅ Redirection vers téléchargement lancée');
+
+      const params = new URLSearchParams({ id: String(doc.id) });
+      const downloadUrl = `/api/download-final?${params.toString()}`;
+
+      const res = await fetch(downloadUrl, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (res.status === 401) {
+        throw new Error('Non authentifié. Veuillez vous connecter.');
+      }
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        throw new Error(`Erreur téléchargement (${res.status}): ${text || res.statusText}`);
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = doc.filename || 'document';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      window.URL.revokeObjectURL(url);
+      console.log('Téléchargement démarré');
       
     } catch (error) {
-      console.error('❌ Erreur téléchargement:', error);
+      console.error('Erreur téléchargement:', error);
       alert('Erreur lors du téléchargement: ' + (error as Error).message);
     } finally {
       setDownloading(false);
@@ -93,7 +114,7 @@ export default function DocumentCard({ doc, isSignedIn }: DocumentCardProps) {
                  </span>
                ) : (
                  <span className="flex items-center gap-2">
-                   <span>📥</span>
+                    
                    <span>Télécharger</span>
                  </span>
                )}

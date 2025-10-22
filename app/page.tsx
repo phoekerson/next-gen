@@ -29,8 +29,6 @@ export default function Home() {
           <ul className="mt-4 space-y-3 text-sm text-gray-700">
             <li>• Upload de PDF, Word, Excel, PowerPoint</li>
             <li>• Filtrage par niveau (B1, B2, B3, M1, M2)</li>
-            <li>• Description et attribution « uploadé par »</li>
-            <li>• Téléchargement réservé aux comptes inscrits</li>
           </ul>
         </div>
       </section>

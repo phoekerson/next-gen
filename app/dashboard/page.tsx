@@ -32,24 +32,6 @@ export default function DashboardPage() {
     fetchDocs();
   }, [levelFilter]);
 
-  useEffect(() => {
-    async function sync() {
-      if (isSignedIn && user) {
-        await fetch('/api/sync-user', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            clerkId: user.id,
-            email: user.primaryEmailAddress?.emailAddress ?? user.emailAddresses?.[0]?.emailAddress ?? null,
-            name: user.firstName ?? user.fullName ?? null,
-            avatarUrl: user.imageUrl ?? null,
-          }),
-        });
-      }
-    }
-    sync();
-  }, [isSignedIn, user]);
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

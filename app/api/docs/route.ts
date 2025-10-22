@@ -1,57 +1,41 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import { PrismaClient, Level } from '@prisma/client';
 
-export async function GET(req: Request) {
+const prisma = new PrismaClient();
+
+export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const level = searchParams.get('level');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '20');
-    
-    // Validation des paramètres
-    const validLevels = ['L1', 'L2', 'L3', 'M1', 'M2'];
-    if (level && !validLevels.includes(level)) {
-      return NextResponse.json({ 
-        error: 'Niveau invalide. Valeurs acceptées: L1, L2, L3, M1, M2' 
-      }, { status: 400 });
+    const levelParam = searchParams.get('level');
+
+    // Construire le filtre
+    const where: any = {};
+    if (levelParam && Object.values(Level).includes(levelParam as Level)) {
+      where.level = levelParam as Level;
     }
 
-    const where = level ? { level: level as any } : {};
-    const skip = (page - 1) * limit;
-
-    const [docs, totalCount] = await Promise.all([
-      prisma.document.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        include: { 
-          uploadedBy: {
-            select: {
-              id: true,
-              name: true,
-              avatarUrl: true
-            }
-          }
-        },
-        skip,
-        take: limit,
-      }),
-      prisma.document.count({ where })
-    ]);
-
-    return NextResponse.json({ 
-      docs,
-      pagination: {
-        page,
-        limit,
-        total: totalCount,
-        totalPages: Math.ceil(totalCount / limit)
-      }
+    const docs = await prisma.document.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        filename: true,
+        fileUrl: true,
+        fileType: true,
+        level: true,
+        uploadedByName: true,
+        createdAt: true,
+      },
     });
 
-  } catch (err: any) {
-    console.error('❌ Erreur lors de la récupération des documents:', err);
-    return NextResponse.json({ 
-      error: 'Erreur lors de la récupération des documents' 
-    }, { status: 500 });
+    return NextResponse.json({ docs });
+  } catch (error) {
+    console.error('Erreur récupération documents:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la récupération des documents' },
+      { status: 500 }
+    );
   }
 }
