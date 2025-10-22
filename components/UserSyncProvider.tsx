@@ -33,12 +33,12 @@ async function syncUser(user: any) {
     });
 
     if (response.ok) {
-      console.log('✅ Utilisateur synchronisé avec succès');
+      console.log(' Utilisateur synchronisé avec succès');
     } else {
       const error = await response.json();
-      console.error('❌ Erreur synchronisation:', error);
+      console.error(' Erreur synchronisation:', error);
     }
   } catch (error) {
-    console.error('❌ Erreur synchronisation utilisateur:', error);
+    console.error(' Erreur synchronisation utilisateur:', error);
   }
 }
