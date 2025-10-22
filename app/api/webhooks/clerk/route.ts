@@ -91,9 +91,9 @@ export async function POST(req: Request) {
       await prisma.user.delete({
         where: { clerkId: id || '' },
       });
-      console.log('✅ Utilisateur supprimé:', id);
+      console.log(' Utilisateur supprimé:', id);
     } catch (error) {
-      console.error('❌ Erreur suppression utilisateur:', error);
+      console.error(' Erreur suppression utilisateur:', error);
     }
   }
 
