@@ -3,7 +3,6 @@ import { ClerkProvider } from '@clerk/nextjs';
 import Header from '../components/Header';
 import UserSyncProvider from '../components/UserSyncProvider';
 import PWAInstallButton from '../components/PWAInstallButton';
-import PWATestButton from '../components/PWATestButton';
 import ServiceWorkerRegistration from '../components/ServiceWorkerRegistration';
 import Image from 'next/image';
 import logo from "@/public/logo.webp";
@@ -23,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Header />
               <main className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">{children}</main>
               <PWAInstallButton />
-              <PWATestButton />
+              
               <ServiceWorkerRegistration />
             </div>
           </UserSyncProvider>
