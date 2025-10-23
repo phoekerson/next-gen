@@ -91,7 +91,7 @@ export default function DashboardPage() {
                 )}
                 {levelFilter && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    📚 {levelFilter}
+                     {levelFilter}
                   </span>
                 )}
               </div>
@@ -200,7 +200,7 @@ export default function DashboardPage() {
               <div className="text-gray-400 text-4xl mb-4">📄</div>
               <p className="text-gray-500">
                 {searchQuery || levelFilter 
-                  ? "Aucun document trouvé avec ces critères." 
+                  ? "Aucun document trouvé avec ce niveau." 
                   : "Aucun document disponible."
                 }
               </p>
