@@ -96,7 +96,7 @@ export default function UploadForm({ onUploaded, user }: any) {
             ref={fileInputRef}
             type="file"
             onChange={handleFileSelect}
-            accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mov"
+            accept=".pdf,.doc,.docx,.apk,.xlsx,.xlsm,.xls,.xlsb,.csv,.pptx,.pptm,.potx,.xml,.py,.dart.,.java,.potm,.txt,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mov"
             className="mt-4 w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer text-sm sm:text-base"
             required
           />
