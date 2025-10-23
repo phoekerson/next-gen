@@ -163,7 +163,7 @@ export default function PWAInstallButton() {
           <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center gap-2 text-xs text-gray-600">
               <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Installation rapide et sécurisée</span>
+              <span className="hidden sm:inline">Installation rapide</span>
               <span className="sm:hidden">Installation rapide</span>
             </div>
             <div className="flex gap-2">

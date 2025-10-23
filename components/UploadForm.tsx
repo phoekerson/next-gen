@@ -78,18 +78,18 @@ export default function UploadForm({ onUploaded, user }: any) {
   };
 
   return (
-    <div className="p-6 border rounded-lg shadow-sm bg-white space-y-4">
+    <div className="p-4 sm:p-6 border rounded-lg shadow-sm bg-white space-y-4">
       <h3 className="text-lg font-semibold text-gray-800">Uploader un nouveau document</h3>
       
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-8 text-center hover:border-blue-400 transition-colors">
           <div className="space-y-2">
-            <div className="text-4xl">📁</div>
-            <p className="text-gray-600">
+            <div className="text-3xl sm:text-4xl">📁</div>
+            <p className="text-sm sm:text-base text-gray-600">
               Cliquez pour sélectionner un fichier ou glissez-déposez ici
             </p>
-            <p className="text-sm text-gray-400">
-              PDF, DOC, DOCX, XLS, PPTX(max 20MB)
+            <p className="text-xs sm:text-sm text-gray-400">
+              PDF, DOC, DOCX, XLS, PPTX (max 20MB)
             </p>
           </div>
           <input
@@ -97,7 +97,7 @@ export default function UploadForm({ onUploaded, user }: any) {
             type="file"
             onChange={handleFileSelect}
             accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mov"
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+            className="mt-4 w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer text-sm sm:text-base"
             required
           />
         </div>
@@ -113,7 +113,7 @@ export default function UploadForm({ onUploaded, user }: any) {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Titre du document *
@@ -122,7 +122,7 @@ export default function UploadForm({ onUploaded, user }: any) {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
               placeholder="Ex: Cours de Mathématiques"
               required
             />
@@ -135,11 +135,11 @@ export default function UploadForm({ onUploaded, user }: any) {
             <select
               value={level}
               onChange={(e) => setLevel(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
             >
-              <option value="L1">L1</option>
-              <option value="L2">L2</option>
-              <option value="L3">L3</option>
+              <option value="L1">B1</option>
+              <option value="L2">B2</option>
+              <option value="L3">B3</option>
               <option value="M1">M1</option>
               <option value="M2">M2</option>
             </select>
@@ -153,7 +153,7 @@ export default function UploadForm({ onUploaded, user }: any) {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
             rows={3}
             placeholder="Décrivez brièvement le contenu du document..."
           />
@@ -171,7 +171,7 @@ export default function UploadForm({ onUploaded, user }: any) {
         <button
           type="submit"
           disabled={loading || !selectedFile}
-          className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
         >
           {loading ? (
             <span className="flex items-center justify-center space-x-2">
