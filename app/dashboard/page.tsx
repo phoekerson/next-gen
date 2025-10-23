@@ -61,9 +61,9 @@ export default function DashboardPage() {
               className="border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Tous niveaux</option>
-              <option value="L1">1ère année (L1)</option>
-              <option value="L2">2ème année (L2)</option>
-              <option value="L3">3ème année (L3)</option>
+              <option value="L1">1ère année (B1)</option>
+              <option value="L2">2ème année (B2)</option>
+              <option value="L3">3ème année (B3)</option>
               <option value="M1">Master 1 (M1)</option>
               <option value="M2">Master 2 (M2)</option>
             </select>
